@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/models/product';
 
-import { ProductResponseModel } from 'src/app/models/productResponseModel';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -14,10 +14,16 @@ export class ProductComponent implements OnInit {
   dataLoaded=false;
   
  
-  constructor(private productService:ProductService) {} //ctor da verdiğimiz değişkene buradan eriebiliyoruz c# da erişemiyorduk. globaldeki değişkene set etmemiz gerekiyordu.
+  constructor(private productService:ProductService, private activatedRoute:ActivatedRoute) {} //ctor da verdiğimiz değişkene buradan eriebiliyoruz c# da erişemiyorduk. globaldeki değişkene set etmemiz gerekiyordu. ActivatedRoute built in bir anguler servisi. Aktifleştirilmiş Route (mevcut route) o anki adres çubuğundaki adres.
 
   ngOnInit(): void {
-    this.getProducts();
+    this.activatedRoute.params.subscribe(params=>{
+      if (params["categoryId"]) {
+        this.getProductsByCategory(params["categoryId"])
+      }else{
+        this.getProducts()
+      }
+    })
   }
   //observable subscribe olunabilir demek. subscribe ın içi senkron çalışır
   getProducts() {
@@ -26,4 +32,13 @@ export class ProductComponent implements OnInit {
       this.dataLoaded=true; //burda data gerçekten yüklenmiş oluyor.
     })
   }
+
+  getProductsByCategory(categoryId:number) {
+    this.productService.getProductsByCategory(categoryId).subscribe(response=>{
+      this.products=response.data
+      this.dataLoaded=true; //burda data gerçekten yüklenmiş oluyor.
+    })
+  }
+
+
 }
