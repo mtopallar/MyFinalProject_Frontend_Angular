@@ -6,6 +6,7 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictNullChecks": false, //bunu biz ekledik.
     "strictPropertyInitialization": false,//bu satırı eklersen new gerekmez.
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
